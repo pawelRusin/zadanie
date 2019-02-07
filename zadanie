@@ -1,0 +1,143 @@
+package Zadanie;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Registration {
+
+    private List<User> listOfUsers;
+    private static Registration ourInstance = new Registration();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static Registration getInstance() {
+        return ourInstance;
+    }
+
+    private Registration() {
+        listOfUsers = new ArrayList<>();
+    }
+
+    public void addUser(String name, int age) {
+        User user = new User(name, age);
+
+        if (checkIfexists(user)) {
+            listOfUsers.add(user);
+            System.out.println("user " + user.getAge() + " " + user.getName() + " was added");
+        } else {
+            System.out.println("user " + user.getAge() + " " + user.getName() + " exists and can not be added");
+        }
+    }
+
+    private boolean checkIfexists(User user) {
+        User temp;
+        for (int i = 0; i < listOfUsers.size(); i++) {
+            temp = listOfUsers.get(i);
+
+            if ((user.getName().equals(temp.getName()) && (user.getAge() == temp.getAge()))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void printList() {
+        for (int i = 0; i < listOfUsers.size(); i++) {
+            System.out.println(listOfUsers.get(i));
+        }
+    }
+
+    public void removeUser(String name)
+    {
+        check(name);
+    }
+
+    private void check(String name) {
+        User temp;
+        int count = 0;
+        int choice;
+        boolean quit = true;
+        boolean isDigit;
+
+        List<Integer> index= new ArrayList<>();
+
+        for (int i = 0; i < listOfUsers.size(); i++) {
+
+            temp = listOfUsers.get(i);
+            if (temp.getName().equals(name)) {
+                count++;
+                System.out.println("we have match  " + temp.getName() + " " + temp.getAge());
+                index.add(listOfUsers.indexOf(temp));
+            }
+        }
+
+        if (count == 0) {
+            System.out.println("there is no user " + name);
+        } else if (count > 1) {
+            System.out.println("choose record to delete. You have " + count + " options\n" +
+                    "0 - to quit");
+
+            while (quit) {
+
+                isDigit = scanner.hasNextInt();
+
+                if (isDigit) {
+                    choice = scanner.nextInt();
+                    System.out.println(choice);
+                    if (choice == 0) {
+                        quit = false;
+                    } else if (choice > count) {
+                        System.out.println(" nie ma takiej pozycji");
+
+                    } else {
+                        choice = choice - 1;
+
+                        System.out.println(" deleye "  + choice + " " + index.size());
+                        System.out.println("deleting user " + listOfUsers.get(index.get(choice)).getName() + " " + listOfUsers.get(index.get(choice)).getAge());
+
+                        int tem = index.get(choice);
+                        listOfUsers.remove(tem);
+
+                        quit = false;
+                    }
+
+                } else {
+                    System.out.println("podaj liczbe ");
+                }
+
+                scanner.nextLine();
+            }
+        }
+    }
+}
+
+package Zadanie;
+public class User {
+
+
+    private String name;
+    private int age;
+
+
+    public User(String name, int age) {
+        this.name = name;
+        this.age = age;
+
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
